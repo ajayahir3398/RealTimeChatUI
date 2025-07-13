@@ -1,7 +1,9 @@
 <div class="add-chat-container">
   <div class="header">
-    <button (click)="goBack()" class="back-btn">← Back</button>
-    <h1>Add New Chat</h1>
+    <span class="back-btn" title="Back" (click)="goBack()" style="cursor:pointer; font-size: 1.2em; margin-left: 10px;">
+      <i class="fas fa-arrow-left"></i>
+    </span>
+    <h3>New Chat</h3>
     <button (click)="showAddContactModal()" class="add-contact-btn">+ Add Contact</button>
   </div>
 
