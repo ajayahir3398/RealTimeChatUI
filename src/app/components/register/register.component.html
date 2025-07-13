@@ -1,0 +1,95 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Register</h2>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          [ngModel]="registerData().name"
+          (ngModelChange)="updateName($event)"
+          required 
+          minlength="2"
+          #name="ngModel"
+          class="form-control"
+          placeholder="Enter your full name">
+        <div *ngIf="name.invalid && name.touched" class="error-message">
+          <div *ngIf="name.errors?.['required']">Name is required</div>
+          <div *ngIf="name.errors?.['minlength']">Name must be at least 2 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input 
+          type="text" 
+          id="mobile" 
+          name="mobile" 
+          [ngModel]="registerData().mobile"
+          (ngModelChange)="updateMobile($event)"
+          required 
+          pattern="[0-9]{10}"
+          #mobile="ngModel"
+          class="form-control"
+          placeholder="Enter mobile number">
+        <div *ngIf="mobile.invalid && mobile.touched" class="error-message">
+          Please enter a valid 10-digit mobile number
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          [ngModel]="registerData().password"
+          (ngModelChange)="updatePassword($event)"
+          required
+          minlength="6"
+          #password="ngModel"
+          class="form-control"
+          placeholder="Enter password">
+        <div *ngIf="password.invalid && password.touched" class="error-message">
+          <div *ngIf="password.errors?.['required']">Password is required</div>
+          <div *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          name="confirmPassword" 
+          [ngModel]="confirmPassword()"
+          (ngModelChange)="updateConfirmPassword($event)"
+          required
+          #confirmPasswordInput="ngModel"
+          class="form-control"
+          placeholder="Confirm password">
+        <div *ngIf="confirmPasswordInput.touched && !passwordsMatch()" class="error-message">
+          Passwords do not match
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage()" class="error-message">
+        {{ errorMessage() }}
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="registerForm.invalid || isLoading() || !passwordsMatch()"
+        class="btn btn-primary">
+        {{ isLoading() ? 'Registering...' : 'Register' }}
+      </button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? 
+      <a routerLink="/login">Login here</a>
+    </div>
+  </div>
+</div> 

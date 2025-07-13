@@ -1,0 +1,54 @@
+<div class="chat-list-container">
+  <div class="header">
+    <h1>Chats</h1>
+    <div class="user-info">
+      <span>Welcome, {{ currentUser()?.name }}</span>
+      <span class="refresh-btn" title="Refresh" (click)="refreshData()" style="cursor:pointer; font-size: 1.2em; margin-left: 10px;">
+        <i class="fas fa-sync-alt"></i>
+      </span>
+      <span class="logout-btn" title="Logout" (click)="logout()" style="cursor:pointer; font-size: 1.2em; margin-left: 10px;">
+        <i class="fas fa-sign-out-alt"></i>
+      </span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="add-chat-section">
+      <button (click)="navigateToAddChat()" class="add-chat-btn">
+        <span>+</span> Add New Chat
+      </button>
+    </div>
+
+    <div class="chats-section">
+      <h2>Recent Chats</h2>
+      
+      <div *ngIf="showLoading()" class="loading">
+        Loading chats and users...
+      </div>
+      
+      <div *ngIf="showNoChats()" class="no-chats">
+        <p>No chats yet. Start a new conversation!</p>
+      </div>
+
+      <div *ngIf="hasChats()" class="chat-list">
+        <div 
+          *ngFor="let chat of filteredChats()" 
+          (click)="openChat(chat._id)"
+          class="chat-item">
+          <div class="chat-avatar">
+            <span>{{ (chatTitles().get(chat._id) || 'Loading...').charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="chat-info">
+            <div class="chat-title">{{ chatTitles().get(chat._id) || 'Loading...' }}</div>
+            <div class="chat-last-message">
+              {{ chat.lastMessage ? chat.lastMessage.message : 'No messages yet' }}
+            </div>
+          </div>
+          <div class="chat-time">
+            {{ getFormattedTime(chat.updatedAt) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

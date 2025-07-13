@@ -1,0 +1,102 @@
+<div class="add-chat-container">
+  <div class="header">
+    <button (click)="goBack()" class="back-btn">← Back</button>
+    <h1>Add New Chat</h1>
+    <button (click)="showAddContactModal()" class="add-contact-btn">+ Add Contact</button>
+  </div>
+
+  <div class="content">
+    <div class="search-section">
+      <input 
+        type="text" 
+        [ngModel]="searchTerm()"
+        (ngModelChange)="updateSearchTerm($event)"
+        placeholder="Search contacts..."
+        class="search-input">
+    </div>
+
+    <div class="contacts-section">
+      <h2>Your Contacts</h2>
+      <div *ngIf="showLoading()" class="loading">
+        Loading contacts...
+      </div>
+      
+      <div *ngIf="showNoContacts()" class="no-contacts">
+        <p>No contacts found. Add some contacts to start chatting!</p>
+      </div>
+
+      <div *ngIf="hasContacts()" class="contact-list">
+        <div 
+          *ngFor="let contact of filteredContacts()" 
+          (click)="startChat(contact)"
+          class="contact-item">
+          <div class="contact-avatar">
+            <span>{{ contact.name.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="contact-info">
+            <div class="contact-name">{{ contact.name }}</div>
+            <div class="contact-mobile">{{ contact.mobile }}</div>
+          </div>
+          <div class="contact-action">
+            <button class="chat-btn">Start Chat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Contact Modal -->
+  <div *ngIf="showModal()" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Add New Contact</h3>
+      <form (ngSubmit)="addContact()" #contactForm="ngForm">
+        <div class="form-group">
+          <label for="contactName">Name</label>
+          <input 
+            type="text" 
+            id="contactName" 
+            name="contactName" 
+            [ngModel]="newContact().name"
+            (ngModelChange)="updateNewContactName($event)"
+            required 
+            #contactName="ngModel"
+            class="form-control"
+            placeholder="Enter contact name">
+          <div *ngIf="contactName.invalid && contactName.touched" class="error-message">
+            Name is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactMobile">Mobile Number</label>
+          <input 
+            type="text" 
+            id="contactMobile" 
+            name="contactMobile" 
+            [ngModel]="newContact().mobile"
+            (ngModelChange)="updateNewContactMobile($event)"
+            required 
+            pattern="[0-9]{10}"
+            #contactMobile="ngModel"
+            class="form-control"
+            placeholder="Enter mobile number">
+          <div *ngIf="contactMobile.invalid && contactMobile.touched" class="error-message">
+            Please enter a valid 10-digit mobile number
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="closeModal()" class="btn btn-secondary">
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            [disabled]="contactForm.invalid || isAddingContact()"
+            class="btn btn-primary">
+            {{ isAddingContact() ? 'Adding...' : 'Add Contact' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

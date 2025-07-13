@@ -1,0 +1,55 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <span class="back-btn" title="Back" (click)="goBack()" style="cursor:pointer; font-size: 1.2em; margin-left: 10px;">
+      <i class="fas fa-arrow-left"></i>
+    </span>
+    <div class="chat-info">
+      <h2 *ngIf="otherMember() as member">{{ member.name }}</h2>
+      <span class="chat-status" *ngIf="otherMember() as member">{{ member.status }}</span>
+      <h2 *ngIf="!otherMember()">{{ getChatTitle() }}</h2>
+      <span class="chat-status" *ngIf="!otherMember()">{{ getChatStatus() }}</span>
+    </div>
+  </div>
+
+  <div class="chat-messages" #messagesContainer>
+    <div *ngIf="showLoading()" class="loading">
+      Loading messages...
+    </div>
+    
+    <div *ngIf="!showLoading() && !hasMessages()" class="no-messages">
+      <p>No messages yet. Start the conversation!</p>
+    </div>
+
+    <div *ngIf="!showLoading() && hasMessages()" class="messages-list">
+      <div 
+        *ngFor="let message of messages()" 
+        [class]="'message ' + (message.senderId._id === currentUser()?._id ? 'sent' : 'received')">
+        <div class="message-content">
+          <div class="message-text">{{ message.message }}</div>
+          <div class="message-time">{{ getFormattedTime(message.createdAt) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <form (ngSubmit)="sendMessage()" #messageForm="ngForm">
+      <div class="input-group">
+        <input 
+          type="text" 
+          [ngModel]="newMessage()"
+          (ngModelChange)="updateNewMessage($event)"
+          name="message"
+          placeholder="Type a message..."
+          class="message-input"
+          [disabled]="isSending()">
+        <button 
+          type="submit" 
+          [disabled]="!canSendMessage()"
+          class="send-btn">
+          {{ isSending() ? 'Sending...' : 'Send' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 
